@@ -1,0 +1,67 @@
+//number to word bangla code.gs
+/**
+ * Converts a number to its Bengali word representation.
+ * @param {number} num - The number to convert.
+ * @return {string} - The Bengali word representation of the number.
+ */
+function N2B(num) {
+  if (typeof num !== 'number' || isNaN(num)) {
+    throw new Error('ভুল');
+  }
+
+  const units = ['', 'এক', 'দুই', 'তিন', 'চার', 'পাঁচ', 'ছয়', 'সাত', 'আট', 'নয়'];
+  const tens = ['', '', 'বিশ', 'ত্রিশ', 'চল্লিশ', 'পঞ্চাশ', 'ষাট', 'সত্তর', 'আশি', 'নব্বই'];
+  const scales = ['', 'হাজার', 'লক্ষ'];
+
+  function convertToWords(n) {
+    if (n === 0) return 'শূন্য';
+
+    let words = '';
+
+    // Handle thousands and higher scales
+    if (n >= 1000) {
+      let thousandIndex = Math.floor(n / 1000);
+      words += convertToWords(thousandIndex) + ' ' + scales[1] + ' ';
+      n %= 1000;
+    }
+
+    // Handle hundreds
+    if (n >= 100) {
+      let hundreds = Math.floor(n / 100);
+      words += units[hundreds] + ' শত '; // Hundred
+      n %= 100;
+    }
+
+    // Handle tens
+    if (n >= 20) {
+      let tenIndex = Math.floor(n / 10);
+      words += tens[tenIndex] + ' ';
+      n %= 10;
+    } else if (n >= 10) {
+      // Special case for 10-19
+      const teens = {
+        10: 'দশ',
+        11: 'এগারো',
+        12: 'বারো',
+        13: 'তেরো',
+        14: 'চৌদ্দ',
+        15: 'পনেরো',
+        16: 'ষোল',
+        17: 'সাতেরো',
+        18: 'আঠরো',
+        19: 'ঊনিশ'
+      };
+      words += teens[n] + ' ';
+      n = 0;
+    }
+
+    // Handle units
+    if (n > 0) {
+      words += units[n] + ' ';
+    }
+
+    return words.trim();
+  }
+
+  return convertToWords(num);
+}
